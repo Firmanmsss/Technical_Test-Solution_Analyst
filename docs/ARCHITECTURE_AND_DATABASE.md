@@ -1,3 +1,8 @@
+```markdown
+### A. Diagram Arsitektur
+
+```mermaid
+
 graph TD
     %% Lapisan Client
     subgraph Client_Layer [Client Layer - Mobile App]
