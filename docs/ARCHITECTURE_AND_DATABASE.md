@@ -1,20 +1,14 @@
-```markdown
 ### A. Diagram Arsitektur
-
 ```mermaid
-
 graph TD
-    %% Lapisan Client
     subgraph Client_Layer [Client Layer - Mobile App]
         MobileApp["📱 Mobile App <br> (Flutter / React Native)"]
     end
 
-    %% Lapisan Keamanan & Router
     subgraph Gateway_Layer [Gateway & Security Layer]
         APIGateway["🔒 API Gateway <br> (Reverse Proxy / Rate Limiting)"]
     end
 
-    %% Lapisan Backend Services
     subgraph Service_Layer [Backend Core Services]
         AuthService["🔑 Authentication Service <br> (Password & Biometric Auth)"]
         UserService["👤 User Profile Service <br> (Registration & Data Diri)"]
@@ -22,39 +16,37 @@ graph TD
         NotificationService["🔔 Notification Dispatcher <br> (Queue-based)"]
     end
 
-    %% Lapisan Data Store
     subgraph Data_Layer [Data & Storage Layer]
         MainDB[("🗄️ Relational Database <br> PostgreSQL / SQL Server")]
         BlobStorage["☁️ Cloud Blob Storage <br> (AWS S3 / Azure Blob for KTP)"]
         MessageQueue["📥 Message Queue <br> (RabbitMQ / Redis PubSub)"]
     end
 
-    %% Lapisan Pihak Ketiga
     subgraph Third_Party [Third-Party Services]
         SMTPServer["📧 Email SMTP Provider"]
         SMSGateway["💬 SMS/WhatsApp Gateway"]
     end
 
-    %% Hubungan Aliran Data (Panah)
-    MobileApp -->|HTTPS / REST API| APIGateway
+    MobileApp --> APIGateway
     
     APIGateway --> AuthService
     APIGateway --> UserService
     APIGateway --> LoanService
     
-    UserService -->|Upload Image| BlobStorage
-    AuthService & UserService & LoanService --> MainDB
+    UserService --> BlobStorage
+    AuthService --> MainDB
+    UserService --> MainDB
+    LoanService --> MainDB
     
-    LoanService -->|Trigger Notif Event| MessageQueue
+    LoanService --> MessageQueue
     MessageQueue --> NotificationService
     
     NotificationService --> SMTPServer
     NotificationService --> SMSGateway
     
-    SMTPServer -.->|Kirim Email| MobileApp
-    SMSGateway -.->|Kirim SMS| MobileApp
+    SMTPServer -.-> MobileApp
+    SMSGateway -.-> MobileApp
 
-    %% Styling Warna agar Presentatif
     style MobileApp fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
     style APIGateway fill:#e67e22,stroke:#d35400,stroke-width:2px,color:#fff
     style AuthService fill:#2ecc71,stroke:#27ae60,stroke-width:1px,color:#fff
