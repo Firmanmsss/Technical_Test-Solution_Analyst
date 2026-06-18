@@ -1,4 +1,4 @@
-### A. Diagram Arsitektur
+### A. Architecture Diagram
 ```mermaid
 ---
 config:
@@ -17,7 +17,7 @@ flowchart TB
         LoanService["💰 Loan &amp; Billing Service <br> (Core Loan Logic)"]
         NotificationService["🔔 Notification Dispatcher <br> (Queue-based)"]
   end
- subgraph Data_Layer["Data &amp; Storage Layer"]
+ subgraph Data_Layer["Data & Storage Layer"]
         MainDB[("🗄️ Relational Database <br> PostgreSQL / SQL Server")]
         BlobStorage["☁️ Cloud Blob Storage <br> (AWS S3 / Azure Blob for KTP)"]
         MessageQueue["📥 Message Queue <br> (RabbitMQ / Redis PubSub)"]
@@ -28,7 +28,7 @@ flowchart TB
   end
     MobileApp --> APIGateway
     APIGateway --> AuthService & UserService & LoanService
-    UserService --> MainDB & BlobStorage
+    UserService --> BlobStorage & MainDB
     AuthService --> MainDB
     LoanService --> MainDB & MessageQueue
     MessageQueue --> NotificationService
